@@ -1,23 +1,24 @@
-import logo from './logo.svg';
-import './App.css';
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import AddProduct from "./components/products/AddProduct";
+import ViewProduct from "./components/products/ViewProduct";
+import UpdateViewProduct from "./components/products/UpdateViewProduct";
+import UpdateProduct from "./components/products/UpdateProduct";
+
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Router>
+        <Routes>
+          <Route path="/" element={<ViewProduct />} />
+          <Route path="/add-new-product" element={<AddProduct />} />
+          <Route path="/view-product" element={<ViewProduct />} />
+          <Route path="/update-view-product" element={<UpdateViewProduct />} />
+          <Route path="/update-product/:firebaseId" element={<UpdateProduct />} />
+
+
+        </Routes>
+      </Router>
     </div>
   );
 }
