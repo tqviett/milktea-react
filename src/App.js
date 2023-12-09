@@ -15,8 +15,6 @@ function App() {
           <Route path="/view-product" element={<ViewProduct />} />
           <Route path="/update-view-product" element={<UpdateViewProduct />} />
           <Route path="/update-product/:firebaseId" element={<UpdateProduct />} />
-
-
         </Routes>
       </Router>
     </div>
