@@ -96,11 +96,11 @@ function AddProduct() {
       />
       <br />
       <button onClick={saveData}>Sava data</button>
-      <button onClick={() => navigate("update-view-product")}>
-        GO UPDATE READ
+      <button onClick={() => navigate("/view-product")}>
+        GO view product
       </button>{" "}
       <br />
-      <button onClick={() => navigate("/")}>GO HOMEPAGE</button>
+      <button onClick={() => navigate("/")}> HOMEPAGE</button>
     </div>
   );
 }

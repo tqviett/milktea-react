@@ -130,9 +130,6 @@ function UpdateProduct() {
       />
       <br />
       <button onClick={overwriteData}>update data</button>
-      <button className="button1" onClick={() => navigate("/update-view-product")}>
-        GO UPDATE View Product 
-      </button>{" "}
       <br />
       <button className="button1" onClick={() => navigate("/")}>
         GO ViewProduct
