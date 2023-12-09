@@ -1,20 +1,12 @@
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import AddProduct from "./components/products/AddProduct";
-import ViewProduct from "./components/products/ViewProduct";
-import UpdateProduct from "./components/products/UpdateProduct";
+import  Navbar from "./components/layout/Navbar"
 
+import Routes from './components/routes/IndexRoutes';
 
 function App() {
   return (
     <div className="App">
-      <Router>
-        <Routes>
-          <Route path="/" element={<ViewProduct />} />
-          <Route path="/add-new-product" element={<AddProduct />} />
-          <Route path="/view-product" element={<ViewProduct />} />
-          <Route path="/update-product/:firebaseId" element={<UpdateProduct />} />
-        </Routes>
-      </Router>
+      <Navbar />    
+        <Routes />
     </div>
   );
 }

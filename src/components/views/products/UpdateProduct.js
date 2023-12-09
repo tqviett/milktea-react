@@ -1,5 +1,5 @@
 import { React, useState, useEffect } from "react";
-import app from "../../firebaseConfig";
+import app from "../../../firebaseConfig";
 import { getDatabase, ref, set, get } from "firebase/database";
 import { useNavigate, useParams } from "react-router-dom";
 
@@ -131,7 +131,7 @@ function UpdateProduct() {
       <br />
       <button onClick={overwriteData}>update data</button>
       <br />
-      <button className="button1" onClick={() => navigate("/")}>
+      <button className="button1" onClick={() => navigate("/view-product")}>
         GO ViewProduct
       </button>
     </div>

@@ -1,9 +1,9 @@
 import { React, useState } from "react";
-import app from "../../firebaseConfig";
+import app from "../../../firebaseConfig";
 import { getDatabase, ref, set, push } from "firebase/database";
 import { useNavigate } from "react-router-dom";
 
-function AddProduct() {
+function CreateProduct() {
   let [inputValue1, setInputValue1] = useState("");
   let [inputValue2, setInputValue2] = useState("");
   let [inputValue3, setInputValue3] = useState("");
@@ -104,4 +104,4 @@ function AddProduct() {
     </div>
   );
 }
-export default AddProduct;
+export default CreateProduct;
