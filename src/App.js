@@ -1,12 +1,16 @@
 import  Navbar from "./components/layout/Navbar"
+import  StickyFooter from "./components/layout/StickyFooter"
+import  Main from "./components/layout/Main"
 
-import Routes from './components/routes/IndexRoutes';
+
+
 
 function App() {
   return (
     <div className="App">
-      <Navbar />    
-        <Routes />
+      <Navbar /> 
+        <Main/>
+      <StickyFooter/>
     </div>
   );
 }
