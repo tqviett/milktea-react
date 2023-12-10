@@ -38,7 +38,7 @@ function CreateProduct() {
   
   return (
     <div class="">
-      <h1>View Product</h1>
+      <h1>Create Product</h1>
       <p>Name</p>
       <input
         type="text"
