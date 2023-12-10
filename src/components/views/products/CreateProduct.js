@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   Button,
   TextField,
@@ -9,28 +9,33 @@ import {
   FormControlLabel,
   Checkbox,
   Snackbar,
-} from '@mui/material';
+} from "@mui/material";
 import { getDatabase, ref, push, set } from "firebase/database";
 import { useNavigate } from "react-router-dom";
 
 const CreateProduct = () => {
   const [formData, setFormData] = useState({
-    productName: '',
-    description: '',
-    image: '',
-    price: '',
-    rating: '',
-    discount: '',
-    quantitySold: '',
+    productName: "",
+    description: "",
+    image: "",
+    price: "",
+    rating: "",
+    discount: "",
+    quantitySold: "",
     status: false,
   });
 
   const [notificationOpen, setNotificationOpen] = useState(false);
 
   const navigate = useNavigate();
-  
+
   const handleChange = (event) => {
-    const value = event.target.type === 'checkbox' ? (event.target.checked ? 1 : 0) : event.target.value;
+    const value =
+      event.target.type === "checkbox"
+        ? event.target.checked
+          ? 1
+          : 0
+        : event.target.value;
 
     setFormData({
       ...formData,
@@ -39,53 +44,60 @@ const CreateProduct = () => {
   };
 
   const saveData = async () => {
-   const db = getDatabase();
-   const newDocRef = push(ref(db, "drinks"));
- 
-   // Chuyển đổi các trường sang kiểu số nếu có thể
-   const price = parseFloat(formData.price);
-   const rating = parseFloat(formData.rating);
-   const sale = parseFloat(formData.discount);
-   const soldCount = parseInt(formData.quantitySold);
- 
-   // Kiểm tra nếu chuyển đổi thành công, sử dụng giá trị mới, ngược lại sử dụng giá trị ban đầu
-   set(newDocRef, {
-     drinks_name: formData.productName,
-     description: formData.description,
-     drinks_image: formData.image,
-     price: isNaN(price) ? formData.price : price,
-     rating: isNaN(rating) ? formData.rating : rating,
-     sale: isNaN(sale) ? formData.discount : sale,
-     sold_count: isNaN(soldCount) ? formData.quantitySold : soldCount,
-     status: formData.status,
-    })
-    .then(() => {
-      setNotificationOpen(true);
-    })
-    .catch((error) => {
-      console.error("Error: " + error.message);
-    });
-};
+    const db = getDatabase();
+    const newDocRef = push(ref(db, "drinks"));
 
+    // Chuyển đổi các trường sang kiểu số nếu có thể
+    const price = parseFloat(formData.price);
+    const rating = parseFloat(formData.rating);
+    const sale = parseFloat(formData.discount);
+    const soldCount = parseInt(formData.quantitySold);
+
+    // Kiểm tra nếu chuyển đổi thành công, sử dụng giá trị mới, ngược lại sử dụng giá trị ban đầu
+    set(newDocRef, {
+      drinks_name: formData.productName,
+      description: formData.description,
+      drinks_image: formData.image,
+      price: isNaN(price) ? formData.price : price,
+      rating: isNaN(rating) ? formData.rating : rating,
+      sale: isNaN(sale) ? formData.discount : sale,
+      sold_count: isNaN(soldCount) ? formData.quantitySold : soldCount,
+      status: formData.status,
+    })
+      .then(() => {
+        setNotificationOpen(true);
+      })
+      .catch((error) => {
+        console.error("Error: " + error.message);
+      });
+  };
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    console.log('Form submitted with data:', formData);
+    console.log("Form submitted with data:", formData);
     saveData(); // Lưu dữ liệu khi form được submit
   };
 
   const handleNotificationClose = () => {
     setNotificationOpen(false);
-     navigate("/view-product");
+    navigate("/view-product");
   };
 
   return (
     <Container component="main" maxWidth="md">
-      <Paper elevation={3} style={{ padding: 40, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+      <Paper
+        elevation={3}
+        style={{
+          padding: 40,
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+        }}
+      >
         <Typography variant="h4" style={{ marginBottom: 20 }}>
           THÊM TRÀ SỮA MỚI
         </Typography>
-        <form onSubmit={handleSubmit} style={{ width: '100%' }}>
+        <form onSubmit={handleSubmit} style={{ width: "100%" }}>
           <Grid container spacing={2}>
             <Grid item xs={12} sm={6}>
               <TextField
@@ -163,7 +175,14 @@ const CreateProduct = () => {
             </Grid>
             <Grid item xs={12}>
               <FormControlLabel
-                control={<Checkbox color="primary" checked={formData.status === 1} onChange={handleChange} name="status" />}
+                control={
+                  <Checkbox
+                    color="primary"
+                    checked={formData.status === 1}
+                    onChange={handleChange}
+                    name="status"
+                  />
+                }
                 label="Status"
               />
             </Grid>

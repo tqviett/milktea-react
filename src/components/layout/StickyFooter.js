@@ -12,8 +12,7 @@ function Copyright() {
       {"FOOTER © "}
       <Link color="inherit" href="">
         VDTEA WEBSITE
-      </Link>
-      {" "}
+      </Link>{" "}
       {new Date().getFullYear()}
       {"."}
     </Typography>

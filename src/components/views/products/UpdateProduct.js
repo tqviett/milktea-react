@@ -1,5 +1,17 @@
-import { React, useState, useEffect } from "react";
-import app from "../../../firebaseConfig";
+import React, { useState, useEffect } from "react";
+import Fab from "@mui/material/Fab";
+import AddIcon from "@mui/icons-material/Add";
+import {
+  Button,
+  TextField,
+  Checkbox,
+  Snackbar,
+  Paper,
+  Typography,
+  Container,
+  Grid,
+  FormControlLabel,
+} from "@mui/material";
 import { getDatabase, ref, set, get } from "firebase/database";
 import { useNavigate, useParams } from "react-router-dom";
 
@@ -7,14 +19,18 @@ function UpdateProduct() {
   const navigate = useNavigate();
   const { firebaseId } = useParams();
 
-  let [inputValue1, setInputValue1] = useState("");
-  let [inputValue2, setInputValue2] = useState("");
-  let [inputValue3, setInputValue3] = useState("");
-  let [inputValue4, setInputValue4] = useState("");
-  let [inputValue5, setInputValue5] = useState("");
-  let [inputValue6, setInputValue6] = useState("");
-  let [inputValue7, setInputValue7] = useState("");
-  let [inputValue8, setInputValue8] = useState("");
+  const [formData, setFormData] = useState({
+    productName: "",
+    description: "",
+    image: "",
+    price: "",
+    rating: "",
+    discount: "",
+    quantitySold: "",
+    status: "0",
+  });
+
+  const [notificationOpen, setNotificationOpen] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -24,20 +40,22 @@ function UpdateProduct() {
           return;
         }
 
-        const db = getDatabase(app);
+        const db = getDatabase();
         const dbRef = ref(db, "drinks/" + firebaseId);
         const snapshot = await get(dbRef);
 
         if (snapshot.exists()) {
           const targetObject = snapshot.val();
-          setInputValue1(targetObject.drinks_name);
-          setInputValue2(targetObject.description);
-          setInputValue3(targetObject.drinks_image);
-          setInputValue4(targetObject.price);
-          setInputValue5(targetObject.rating);
-          setInputValue6(targetObject.sale);
-          setInputValue7(targetObject.sold_count);
-          setInputValue8(targetObject.status);
+          setFormData({
+            productName: targetObject.drinks_name,
+            description: targetObject.description,
+            image: targetObject.drinks_image,
+            price: String(targetObject.price),
+            rating: String(targetObject.rating),
+            discount: String(targetObject.sale),
+            quantitySold: String(targetObject.sold_count),
+            status: String(targetObject.status),
+          });
         } else {
           alert("Không lấy được dữ liệu");
         }
@@ -49,92 +67,181 @@ function UpdateProduct() {
 
     fetchData();
   }, [firebaseId]);
+
+  const handleChange = (event) => {
+    const value =
+      event.target.type === "checkbox"
+        ? event.target.checked
+          ? 1
+          : 0
+        : event.target.value;
+
+    setFormData({
+      ...formData,
+      [event.target.name]: value,
+    });
+  };
   const overwriteData = async () => {
-    const db = getDatabase(app);
+    const db = getDatabase();
     const newDocRef = ref(db, "drinks/" + firebaseId);
     set(newDocRef, {
-      drinks_name: inputValue1,
-      description: inputValue2,
-      drinks_image: inputValue3,
-      price: inputValue4,
-      rating: inputValue5,
-      sale: inputValue6,
-      sold_count: inputValue7,
-      status: inputValue8,
+      drinks_name: formData.productName,
+      description: formData.description,
+      drinks_image: formData.image,
+      price: parseFloat(formData.price),
+      rating: parseFloat(formData.rating),
+      sale: parseFloat(formData.discount),
+      sold_count: parseInt(formData.quantitySold),
+      status: formData.status,
     })
       .then(() => {
-        alert("data saved successfully");
+        setNotificationOpen(true);
       })
       .catch((error) => {
         alert("error:", error.message);
       });
   };
 
+  const handleNotificationClose = () => {
+    setNotificationOpen(false);
+    navigate("/view-product");
+  };
+
   return (
-    <div>
-      <h1>Update Product</h1>
-      <p>Name</p>
-      <input
-        type="text"
-        value={inputValue1}
-        onChange={(e) => setInputValue1(e.target.value)}
-      />
-      <br />
-      <p>Description</p>
-      <input
-        type="text"
-        value={inputValue2}
-        onChange={(e) => setInputValue2(e.target.value)}
-      />
-      <br />
-      <p>Image</p>
-      <input
-        type="text"
-        value={inputValue3}
-        onChange={(e) => setInputValue3(e.target.value)}
-      />
-      <br />
-      <p>Price</p>
-      <input
-        type="text"
-        value={inputValue4}
-        onChange={(e) => setInputValue4(e.target.value)}
-      />
-      <br />
-      <p>Rating</p>
-      <input
-        type="text"
-        value={inputValue5}
-        onChange={(e) => setInputValue5(e.target.value)}
-      />
-      <br />
-      <p>Sale</p>
-      <input
-        type="text"
-        value={inputValue6}
-        onChange={(e) => setInputValue6(e.target.value)}
-      />
-      <br />
-      <p>Sould Count</p>
-      <input
-        type="text"
-        value={inputValue7}
-        onChange={(e) => setInputValue7(e.target.value)}
-      />
-      <br />
-      <p>Status</p>
-      <input
-        type="text"
-        value={inputValue8}
-        onChange={(e) => setInputValue8(e.target.value)}
-      />
-      <br />
-      <button onClick={overwriteData}>update data</button>
-      <br />
-      <button className="button1" onClick={() => navigate("/view-product")}>
-        GO ViewProduct
-      </button>
-    </div>
+    <Container component="main" maxWidth="md">
+      <Paper
+        elevation={3}
+        style={{
+          padding: 40,
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+        }}
+      >
+        <Typography variant="h4" style={{ marginBottom: 20 }}>
+          CẬP NHẬT TRÀ SỮA
+        </Typography>
+        <form style={{ width: "100%" }}>
+          <Grid container spacing={2}>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                variant="outlined"
+                fullWidth
+                label="Tên sản phẩm"
+                name="productName"
+                value={formData.productName}
+                onChange={handleChange}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                variant="outlined"
+                fullWidth
+                label="Mô tả"
+                name="description"
+                value={formData.description}
+                onChange={handleChange}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                variant="outlined"
+                fullWidth
+                label="Image URL"
+                name="image"
+                value={formData.image}
+                onChange={handleChange}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                variant="outlined"
+                fullWidth
+                label="Giá"
+                name="price"
+                type="number"
+                value={formData.price}
+                onChange={handleChange}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                variant="outlined"
+                fullWidth
+                label="Đánh giá"
+                name="rating"
+                type="number"
+                value={formData.rating}
+                onChange={handleChange}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                variant="outlined"
+                fullWidth
+                label="Giảm giá(%)"
+                name="discount"
+                type="number"
+                value={formData.discount}
+                onChange={handleChange}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                variant="outlined"
+                fullWidth
+                label="Số lượng đã bán(cốc)"
+                name="quantitySold"
+                type="number"
+                value={formData.quantitySold}
+                onChange={handleChange}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    color="primary"
+                    checked={formData.status}
+                    onChange={handleChange}
+                    name="status"
+                  />
+                }
+                label="Status"
+              />
+            </Grid>
+          </Grid>
+          <Button
+            onClick={overwriteData}
+            fullWidth
+            variant="contained"
+            color="primary"
+            style={{ marginTop: 20 }}
+          >
+            Cập nhật
+          </Button>
+        </form>
+        <Snackbar
+          open={notificationOpen}
+          autoHideDuration={6000}
+          onClose={handleNotificationClose}
+          message="Cập nhật sản phẩm thành công"
+        />
+        <Button onClick={() => navigate("/view-product")}>
+          Danh sách sản phẩm
+        </Button>{" "}
+        <Button onClick={() => navigate("/")}>Trang chủ</Button>
+      </Paper>
+      <Fab
+        style={{ position: "fixed", right: 20, bottom: 110 }}
+        color="primary"
+        aria-label="add"
+        onClick={() => navigate("/create-new-product")}
+      >
+        <AddIcon />
+      </Fab>
+    </Container>
   );
 }
+
 export default UpdateProduct;
